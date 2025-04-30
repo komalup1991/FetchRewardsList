@@ -34,7 +34,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             FetchRewardsListTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    ItemScreen(viewModel = viewModel)
+                    ItemScreen(viewModel = viewModel, Modifier.padding(innerPadding))
                 }
             }
         }

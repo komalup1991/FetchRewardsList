@@ -4,12 +4,9 @@ import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.WindowInsets
-import androidx.compose.foundation.layout.asPaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.CircularProgressIndicator
@@ -30,27 +27,27 @@ import com.example.fetchrewardslist.model.UiState
 import com.example.fetchrewardslist.viewmodel.FetchListViewModel
 
 @Composable
-fun ItemScreen(viewModel: FetchListViewModel) {
+fun ItemScreen(viewModel: FetchListViewModel, modifier: Modifier) {
     val uiStateFlow = viewModel.fetchItems().collectAsState()
     when (val uiState = uiStateFlow.value) {
-        UiState.Loading -> LoadingScreen()
-        UiState.UpdateEmptyState -> EmptyScreen()
+        UiState.Loading -> LoadingScreen(modifier)
+        UiState.UpdateEmptyState -> EmptyScreen(modifier)
         is UiState.ErrorState -> ErrorScreen(uiState.error)
-        is UiState.UpdateList -> ItemList(uiState.list)
+        is UiState.UpdateList -> ItemList(uiState.list, modifier)
     }
 
 }
 
 @Composable
-fun LoadingScreen() {
-    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+fun LoadingScreen(modifier: Modifier) {
+    Box(modifier = modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
         CircularProgressIndicator()
     }
 }
 
 @Composable
-fun EmptyScreen() {
-    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+fun EmptyScreen(modifier: Modifier) {
+    Box(modifier = modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
         Text(text = "Nothing to fetch here!! 🐶")
     }
 
@@ -66,13 +63,12 @@ fun ErrorScreen(error: String) {
 }
 
 @Composable
-fun ItemList(list: Map<Int, List<Item>>) {
+fun ItemList(list: Map<Int, List<Item>>, modifier: Modifier) {
     val expandedStates = remember { mutableStateMapOf<Int, Boolean>() }
 
     LazyColumn(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxSize()
-            .padding(WindowInsets.statusBars.asPaddingValues())
             .padding(horizontal = 16.dp)
     ) {
         list.forEach { (groupId, itemsInGroup) ->
