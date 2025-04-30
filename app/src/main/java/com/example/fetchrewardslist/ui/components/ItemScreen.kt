@@ -50,6 +50,9 @@ fun LoadingScreen() {
 
 @Composable
 fun EmptyScreen() {
+    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+        Text(text = "Nothing to fetch here!! 🐶")
+    }
 
 }
 
