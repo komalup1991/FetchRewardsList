@@ -64,6 +64,11 @@ dependencies {
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
 
     testImplementation(libs.junit)
+
+    testImplementation ("junit:junit:4.13.2")
+    testImplementation ("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.6.4")
+    testImplementation ("io.mockk:mockk:1.13.2")
+
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(platform(libs.androidx.compose.bom))
