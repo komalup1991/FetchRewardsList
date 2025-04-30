@@ -2,7 +2,6 @@ package com.example.fetchrewardslist.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.fetchrewardslist.model.Item
 import com.example.fetchrewardslist.model.Response
 import com.example.fetchrewardslist.model.UiState
 import com.example.fetchrewardslist.repository.FetchListRepository
