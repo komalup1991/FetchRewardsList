@@ -13,24 +13,45 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.example.fetchrewardslist.model.Item
+import com.example.fetchrewardslist.model.UiState
 import com.example.fetchrewardslist.viewmodel.FetchListViewModel
 
 @Composable
 fun ItemScreen(viewModel: FetchListViewModel) {
-    val groupedItems by viewModel.fetchItems().collectAsState()
-
-    LaunchedEffect(Unit) {
-        viewModel.fetchItems()
+    val uiStateFlow = viewModel.fetchItems().collectAsState()
+    when (val uiState = uiStateFlow.value) {
+        UiState.Loading -> LoadingScreen()
+        UiState.UpdateEmptyState -> EmptyScreen()
+        is UiState.ErrorState -> ErrorScreen(uiState.error)
+        is UiState.UpdateList -> ItemList(uiState.list)
     }
-    
+
+}
+
+@Composable
+fun LoadingScreen() {
+
+}
+
+@Composable
+fun EmptyScreen() {
+
+}
+
+@Composable
+fun ErrorScreen(error: String) {
+
+}
+
+@Composable
+fun ItemList(list: Map<Int, List<Item>>) {
     val expandedStates = remember { mutableStateMapOf<Int, Boolean>() }
 
     LazyColumn(
@@ -39,7 +60,7 @@ fun ItemScreen(viewModel: FetchListViewModel) {
             .padding(WindowInsets.statusBars.asPaddingValues())
             .padding(horizontal = 16.dp)
     ) {
-        groupedItems.forEach { (groupId, itemsInGroup) ->
+        list.forEach { (groupId, itemsInGroup) ->
             val isExpanded = expandedStates[groupId] ?: false
 
             item {
@@ -58,7 +79,7 @@ fun ItemScreen(viewModel: FetchListViewModel) {
 
             if (isExpanded) {
                 val sortedItems = itemsInGroup.sortedWith(
-                    compareBy<com.example.fetchrewardslist.model.Item> { it.id }
+                    compareBy<Item> { it.id }
                         .thenBy { it.name }
                 )
 
